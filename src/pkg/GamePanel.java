@@ -10,12 +10,56 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements KeyListener {
-	Player p1 = new Player(10,200,5,50,5);
-	Player p2 = new Player(0,200,5,50,5);
+	Player p1 = new Player(10,200,5,50,5,0,0);
+	Player p2 = new Player(0,200,5,50,5,0,0);
+	Ball ball = new Ball(200,200,5,5,5,5);
 	Timer t = new Timer(1000/60, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			p2.collisionBox.y = p2.y;
+			p2.collisionBox.x = p2.x;
+			p1.collisionBox.y = p2.y;
+			p1.collisionBox.x = p1.x;
+			ball.ballBox.y = ball.y;
 			repaint();
+			if (p1.up || p1.down) {
+				while (p1.vy <= p1.speed && p1.vy >= (p1.speed*-1)) {
+					p1.vy*=2;
+				}
+			}
+			if (p1.left || p1.right) {
+				while (p1.vx <= p1.speed && p1.vx >= (p1.speed*-1)) {
+					p1.vx*=2;
+				}
+			}
+			if (p2.up || p2.down) {
+				while (p2.vy <= p2.speed && p2.vy >= (p2.speed*-1)) {
+					p2.vy*=2;
+				}
+			}
+			if (p2.left || p2.right) {
+				while (p2.vx <= p2.speed && p2.vx >= (p2.speed*-1)) {
+					p2.vx*=2;
+				}
+			}
+			if (ball.ballBox.intersects(p1.collisionBox)) {
+				if (p1.vy>0 || p1.vy<0) {
+					ball.vy+=(p1.vy/2);
+				}
+				if (p1.vx>0 || p1.vx<0) {
+					ball.vx+=(p1.vy/2);
+				}
+				ball.vx = ball.vx*-1;
+			}
+			if (ball.ballBox.intersects(p2.collisionBox)) {
+				if (p2.vy>0 || p2.vy<0) {
+					ball.vy+=(p2.vy/2);
+				}
+				if (p2.vx>0 || p2.vx<0) {
+					ball.vx+=(p2.vy/2);
+				}
+				ball.vx = ball.vx*-1;
+			}
 		}});
 	
 	
@@ -27,6 +71,7 @@ public class GamePanel extends JPanel implements KeyListener {
 		g.fillRect(0, 0, PongRunner.width, PongRunner.height);
 		p1.draw(g);
 		p2.draw(g);
+		ball.draw(g);
 	}
 
 

@@ -1,6 +1,7 @@
 package pkg;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class Player {
 	int width;
@@ -8,27 +9,33 @@ public class Player {
 	int x;
 	int y;
 	int speed;
+	
+	int vx;
+	int vy;
 	boolean up, down, left, right;
-	public Player(int x, int y, int width, int height, int speed) {
+	Rectangle collisionBox;
+	public Player(int width, int height, int x, int y, int speed, int vx, int vy) {
 		super();
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		this.vx = vx;
+		this.vy = vy;
 	}
-	void update(Graphics g) {
+	void updateVelocity() {
 		if (up) {
-			y-=speed;
+			vy = speed*(-1);
 		}
 		if (down) {
-			y+= speed;
+			vy = speed;
 		}
 		if(left) {
-			x-=speed;
+			vx = speed*(-1);
 		}
 		if (right) {
-			x+=speed;
+			vx = speed;
 		}
 	}
 	void draw(Graphics g) {
@@ -63,6 +70,18 @@ public class Player {
 	}
 	public void setSpeed(int speed) {
 		this.speed = speed;
+	}
+	public int getVx() {
+		return vx;
+	}
+	public void setVx(int vx) {
+		this.vx = vx;
+	}
+	public int getVy() {
+		return vy;
+	}
+	public void setVy(int vy) {
+		this.vy = vy;
 	}
 	public boolean isUp() {
 		return up;
