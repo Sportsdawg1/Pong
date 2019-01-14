@@ -18,7 +18,7 @@ public class Ball {
 		this.width = width;
 		this.height = height;
 		this.vx = vx;
-		
+		ballBox = new Rectangle(x,y,width,height);
 	}
 	void draw(Graphics g) {
 		g.fillRect(x, y, width, height);

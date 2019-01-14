@@ -14,7 +14,7 @@ public class Player {
 	int vy;
 	boolean up, down, left, right;
 	Rectangle collisionBox;
-	public Player(int width, int height, int x, int y, int speed, int vx, int vy) {
+	public Player(int x, int y, int width, int height, int speed, int vx, int vy) {
 		super();
 		this.width = width;
 		this.height = height;
@@ -23,6 +23,7 @@ public class Player {
 		this.speed = speed;
 		this.vx = vx;
 		this.vy = vy;
+		collisionBox  = new Rectangle(x, y, width, height);
 	}
 	void updateVelocity() {
 		if (up) {
