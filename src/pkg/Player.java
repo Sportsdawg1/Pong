@@ -4,17 +4,17 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 public class Player {
-	int width;
-	int height;
-	int x;
-	int y;
-	int speed;
+	double width;
+	double height;
+	double x;
+	double y;
+	double speed;
 	
-	int vx;
-	int vy;
+	double vx;
+	double vy;
 	boolean up, down, left, right;
 	Rectangle collisionBox;
-	public Player(int x, int y, int width, int height, int speed, int vx, int vy) {
+	public Player(double x, double y, double width, double height, double speed, double vx, double vy) {
 		super();
 		this.width = width;
 		this.height = height;
@@ -23,7 +23,7 @@ public class Player {
 		this.speed = speed;
 		this.vx = vx;
 		this.vy = vy;
-		collisionBox  = new Rectangle(x, y, width, height);
+		collisionBox  = new Rectangle((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
 	}
 	void updateVelocity() {
 		if (up) {
@@ -40,48 +40,48 @@ public class Player {
 		}
 	}
 	void draw(Graphics g) {
-		g.fillRect(x, y, width, height);
+		g.fillRect((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
 	}
-	public int getWidth() {
+	public double getWidth() {
 		return width;
 	}
-	public void setWidth(int width) {
+	public void setWidth(double width) {
 		this.width = width;
 	}
-	public int getHeight() {
+	public double getHeight() {
 		return height;
 	}
-	public void setHeight(int height) {
+	public void setHeight(double height) {
 		this.height = height;
 	}
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
-	public int getVx() {
+	public double getVx() {
 		return vx;
 	}
-	public void setVx(int vx) {
+	public void setVx(double vx) {
 		this.vx = vx;
 	}
-	public int getVy() {
+	public double getVy() {
 		return vy;
 	}
-	public void setVy(int vy) {
+	public void setVy(double vy) {
 		this.vy = vy;
 	}
 	public boolean isUp() {

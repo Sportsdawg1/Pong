@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements KeyListener {
-	Player p1 = new Player(10,200,5,50,5,0,0);
-	Player p2 = new Player(590,200,5,50,5,0,0);
-	Ball ball = new Ball(200,200,5,5,5,5);
+	Player p1 = new Player(10,200,15,70,0.4,0,0);
+	Player p2 = new Player(590,200,15,70,0.4,0,0);
+	Ball ball = new Ball(200,200,20,20,2,2);
 
 	GamePanel(){ 
 		t.start();
@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements KeyListener {
 	
 	
 	
-	Timer t = new Timer(1000/60, new ActionListener() {
+	Timer t = new Timer(1000/180, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			updateCollisionBox(p1);
@@ -34,6 +34,8 @@ public class GamePanel extends JPanel implements KeyListener {
 			curveVelocity(p2);
 			collisions(p1);
 			collisions(p2);
+			System.out.println("VX = " + ball.vx);
+			System.out.println("VY = " + ball.vy);
 //			if (p1.up || p1.down) {
 //				while (p1.vy <= p1.speed && p1.vy >= (p1.speed*-1)) {
 //					p1.vy*=2;
@@ -78,11 +80,61 @@ public class GamePanel extends JPanel implements KeyListener {
 			if (ball.x<0 || ball.x>600) {
 				ball.vx *= -1;
 			}
+			if (p1.x<0) {
+				p1.x = 5;
+				p1.vx = 0;
+			}
+			if (p1.x>600) {
+				p1.x = 590;
+				p1.vx = 0;
+			}
+			if (p1.y<0) {
+				p1.y = 5;
+				p1.vy = 0;
+			}
+			if (p1.y>600) {
+				p1.y = 590;
+				p1.vy = 0;
+			}
+			if (p2.x<0) {
+				p2.x = 5;
+				p2.vx = 0;
+			}
+			if (p2.x>600) {
+				p2.x = 590;
+				p2.vx = 0;
+			}
+			if (p2.y<0) {
+				p2.y = 5;
+				p2.vy = 0;
+			}
+			if (p2.y>600) {
+				p2.y = 590;
+				p2.vy = 0;
+			}
 			
 			p1.x+=p1.vx;
 			p1.y+=p1.vy;
-			ball.x+=ball.vx;
-			ball.y+=ball.vy;
+			p2.x+=p2.vx;
+			p2.y+=p2.vy;
+			if (ball.vx<=6) {
+				
+			}
+			if (-3<=ball.vx && ball.vx<=3) {
+				ball.x+=ball.vx;
+			} else if (ball.vx>3) {
+				ball.vx = 3;
+			} else if (ball.vx<-3) {
+				ball.vx = -3;
+			}
+			if (-3<=ball.vy && ball.vy<=3) {
+				ball.y+=ball.vy;
+			} else if (ball.vy>3) {
+				ball.vy = 3;
+			} else if (ball.vy<-3) {
+				ball.vy = -3;
+			}
+			
 			repaint();
 		}
 
@@ -102,26 +154,26 @@ public class GamePanel extends JPanel implements KeyListener {
 		}});
 	
 	void updateCollisionBox(Player player) {
-		player.collisionBox.y = player.y;
-		player.collisionBox.x = player.x;
+		player.collisionBox.y = (int) Math.round(player.y);
+		player.collisionBox.x = (int) Math.round(player.x);
 	}
 	void updateCollisionBox(Ball ball) {
-		ball.ballBox.y = ball.y;
-		ball.ballBox.x = ball.x;
+		ball.ballBox.y = (int) Math.round(ball.y);
+		ball.ballBox.x = (int) Math.round(ball.x);
 	}
 	void curveVelocity(Player player) {
-		if (player.up || player.down) {
-			while (player.vy <= player.speed && player.vy >= (player.speed*-1)) {
-				player.vy*=2;
-			}
-		}
-		if (player.left || player.right) {
-			while (player.vx <= player.speed && player.vx >= (player.speed*-1)) {
-				player.vx*=2;
-			}
-		}
-		player.vx/=2;
-		player.vy/=2;
+//		if (player.up || player.down) {
+//			while (player.vy <= player.speed && player.vy >= (player.speed*-1)) {
+//				player.vy*=2;
+//			}
+//		}
+//		if (player.left || player.right) {
+//			while (player.vx <= player.speed && player.vx >= (player.speed*-1)) {
+//				player.vx*=2;
+//			}
+//		}
+		player.vx/=1.1;
+		player.vy/=1.1;
 		
 	}
 	void collisions (Player player) {
@@ -141,7 +193,7 @@ public class GamePanel extends JPanel implements KeyListener {
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, PongRunner.width, PongRunner.height);
+		g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
 		g.setColor(Color.WHITE);
 		p1.draw(g);
 		p2.draw(g);
@@ -164,27 +216,35 @@ public class GamePanel extends JPanel implements KeyListener {
 		char charPressed = e.getKeyChar();
 		int keyInt = e.getKeyCode();
 		if (keyInt == KeyEvent.VK_UP) {
+			System.out.println("2up");
 			p2.up = true;
 		}
 		if (keyInt == KeyEvent.VK_DOWN) {
+			System.out.println("2down");
 			p2.down = true;
 		}
 		if (keyInt == KeyEvent.VK_LEFT) {
+			System.out.println("2left");
 			p2.left = true;
 		}
 		if (keyInt == KeyEvent.VK_RIGHT) {
+			System.out.println("2right");
 			p2.right = true;
 		}
-		if (charPressed == 'w') {
+		if (keyInt == KeyEvent.VK_W) {
+			System.out.println("1up");
 			p1.up = true;
 		}
-		if (charPressed == 'a') {
-			p1.left = true;
-		}
-		if (charPressed == 's') {
+		if (keyInt == KeyEvent.VK_S) {
+			System.out.println("1down");
 			p1.down = true;
 		}
-		if (charPressed == 'd') {
+		if (keyInt == KeyEvent.VK_A) {
+			System.out.println("1left");
+			p1.left = true;
+		}
+		if (keyInt == KeyEvent.VK_D) {
+			System.out.println("1right");
 			p1.right = true;
 		}
 	}
