@@ -11,19 +11,35 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements KeyListener {
-	Player p1 = new Player(10,200,15,70,0.4,0,0);
-	Player p2 = new Player(590,200,15,70,0.4,0,0);
-	Ball ball = new Ball(200,200,20,20,2,2);
-
+	Player p1 = new Player(40,200,5,70,0.3,0,0,0);
+	Player p2 = new Player(560,200,5,70,0.3,0,0,0);
+	Ball ball = new Ball(200,200,20,20,1.5,0);
+	int currentState;
+	
+	int collisionCheck = 0;
+	static boolean enter = false;
 	GamePanel(){ 
 		t.start();
+		setFocusable(true);
 	}
 	
 	
-	
+	Timer CollisionTimer = new Timer(1000/180, null);
+
 	Timer t = new Timer(1000/180, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (ball.x > 580) {
+				p1.points++;
+				System.out.println(p1.points);
+				reset();
+			}
+			if (ball.x < 20) {
+				p2.points++;
+				System.out.println(p2.points);
+				reset();
+			}
+			collisionCheck++;
 			updateCollisionBox(p1);
 			updateCollisionBox(p2);
 			updateCollisionBox(ball);
@@ -34,8 +50,6 @@ public class GamePanel extends JPanel implements KeyListener {
 			curveVelocity(p2);
 			collisions(p1);
 			collisions(p2);
-			System.out.println("VX = " + ball.vx);
-			System.out.println("VY = " + ball.vy);
 //			if (p1.up || p1.down) {
 //				while (p1.vy <= p1.speed && p1.vy >= (p1.speed*-1)) {
 //					p1.vy*=2;
@@ -177,15 +191,32 @@ public class GamePanel extends JPanel implements KeyListener {
 		
 	}
 	void collisions (Player player) {
-		if (ball.ballBox.intersects(player.collisionBox)) {
+		if (ball.ballBox.intersects(player.collisionBox) && collisionCheck > 60) {
 			if (player.vy>0 || player.vy<0) {
 				ball.vy+=(player.vy/2);
 			}
 			if (player.vx>0 || player.vx<0) {
 				ball.vx+=(player.vy/2);
 			}
+			player.vx+=2*ball.vx;
+			player.vy+=2*ball.vy;
 			ball.vx = ball.vx*-1;
+			collisionCheck = 0;
 		}
+	}
+	void reset() {
+		p1.x = 40;
+		p1.y = 200;
+		p2.x = 560;
+		p2.y = 200;
+		ball.x = 200;
+		ball.y = 200;
+		ball.vx = 1.5;
+		ball.vy = 0;
+		p1.vx = 0;
+		p1.vy = 0;
+		p2.vx = 0;
+		p2.vy = 0;
 	}
 	
 	
@@ -194,6 +225,9 @@ public class GamePanel extends JPanel implements KeyListener {
 		// TODO Auto-generated method stub
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 20, 600);
+		g.fillRect(580, 0, 20, 600);
 		g.setColor(Color.WHITE);
 		p1.draw(g);
 		p2.draw(g);
@@ -215,21 +249,8 @@ public class GamePanel extends JPanel implements KeyListener {
 		// TODO Auto-generated method stub
 		char charPressed = e.getKeyChar();
 		int keyInt = e.getKeyCode();
-		if (keyInt == KeyEvent.VK_UP) {
-			System.out.println("2up");
-			p2.up = true;
-		}
-		if (keyInt == KeyEvent.VK_DOWN) {
-			System.out.println("2down");
-			p2.down = true;
-		}
-		if (keyInt == KeyEvent.VK_LEFT) {
-			System.out.println("2left");
-			p2.left = true;
-		}
-		if (keyInt == KeyEvent.VK_RIGHT) {
-			System.out.println("2right");
-			p2.right = true;
+		if (keyInt == KeyEvent.VK_ENTER) {
+			enter = true;
 		}
 		if (keyInt == KeyEvent.VK_W) {
 			System.out.println("1up");
@@ -247,6 +268,23 @@ public class GamePanel extends JPanel implements KeyListener {
 			System.out.println("1right");
 			p1.right = true;
 		}
+		if (keyInt == KeyEvent.VK_UP) {
+			System.out.println("2up");
+			p2.up = true;
+		}
+		if (keyInt == KeyEvent.VK_DOWN) {
+			System.out.println("2down");
+			p2.down = true;
+		}
+		if (keyInt == KeyEvent.VK_LEFT) {
+			System.out.println("2left");
+			p2.left = true;
+		}
+		if (keyInt == KeyEvent.VK_RIGHT) {
+			System.out.println("2right");
+			p2.right = true;
+		}
+
 	}
 
 
@@ -256,6 +294,18 @@ public class GamePanel extends JPanel implements KeyListener {
 		// TODO Auto-generated method stub
 		int keyInt = e.getKeyCode();
 		char charReleased = e.getKeyChar();
+		if (keyInt == KeyEvent.VK_W) {
+			p1.up = false;
+		}
+		if (keyInt == KeyEvent.VK_S) {
+			p1.down = false;
+		}
+		if (keyInt == KeyEvent.VK_A) {
+			p1.left = false;
+		}
+		if (keyInt == KeyEvent.VK_D) {
+			p1.right = false;
+		}
 		if (keyInt == KeyEvent.VK_UP) {
 			p2.up = false;
 		}
@@ -268,17 +318,6 @@ public class GamePanel extends JPanel implements KeyListener {
 		if (keyInt == KeyEvent.VK_RIGHT) {
 			p2.right = false;
 		}
-		if (charReleased == 'w') {
-			p1.up = false;
-		}
-		if (charReleased == 's') {
-			p1.down = false;
-		}
-		if (charReleased == 'a') {
-			p1.left = false;
-		}
-		if (charReleased == 'd') {
-			p1.right = false;
-		}
+
 	}
 }

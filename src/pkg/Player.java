@@ -9,21 +9,28 @@ public class Player {
 	double x;
 	double y;
 	double speed;
-	
+	int points;
 	double vx;
 	double vy;
 	boolean up, down, left, right;
 	Rectangle collisionBox;
-	public Player(double x, double y, double width, double height, double speed, double vx, double vy) {
+	public Player(double x, double y, double width, double height, double speed, int points, double vx, double vy) {
 		super();
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		this.points = points;
 		this.vx = vx;
 		this.vy = vy;
 		collisionBox  = new Rectangle((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
+	}
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
 	}
 	void updateVelocity() {
 		if (up) {
@@ -40,7 +47,7 @@ public class Player {
 		}
 	}
 	void draw(Graphics g) {
-		g.fillRect((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
+		g.fillRoundRect((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height), 5, 2);
 	}
 	public double getWidth() {
 		return width;

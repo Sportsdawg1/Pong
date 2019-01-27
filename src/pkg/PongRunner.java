@@ -1,6 +1,7 @@
 package pkg;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PongRunner {
@@ -8,10 +9,12 @@ public class PongRunner {
 	public static final double height = 600;
 	JFrame frame = new JFrame("Pong");
 	GamePanel panel = new GamePanel();
-	
 	public static void main(String[] args) {
-		PongRunner r = new PongRunner();
-		r.setup();
+		JOptionPane.showMessageDialog(null, "Control the left paddle with WASD and the right one with the arrow keys.\nDon't let the ball touch the red areas!\nTry to get to three points before your opponent does.");
+		if (GamePanel.enter == true) {
+			PongRunner r = new PongRunner();
+			r.setup();
+		}
 	}
 	void setup() {
 		frame.setVisible(true);
@@ -19,5 +22,6 @@ public class PongRunner {
 		frame.setSize((int) Math.round(width), (int) Math.round(height));
 		frame.add(panel);
 		frame.addKeyListener(panel);
+		panel.CollisionTimer.start();
 	}
 }
