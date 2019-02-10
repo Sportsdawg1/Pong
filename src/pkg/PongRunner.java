@@ -11,10 +11,10 @@ public class PongRunner {
 	GamePanel panel = new GamePanel();
 	public static void main(String[] args) {
 		JOptionPane.showMessageDialog(null, "Control the left paddle with WASD and the right one with the arrow keys.\nDon't let the ball touch the red areas!\nTry to get to three points before your opponent does.");
-		if (GamePanel.enter == true) {
-			PongRunner r = new PongRunner();
-			r.setup();
-		}
+		
+		PongRunner r = new PongRunner();
+		r.setup();
+
 	}
 	void setup() {
 		frame.setVisible(true);

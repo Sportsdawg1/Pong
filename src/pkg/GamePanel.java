@@ -14,13 +14,16 @@ public class GamePanel extends JPanel implements KeyListener {
 	Player p1 = new Player(40,200,5,70,0.3,0,0,0);
 	Player p2 = new Player(560,200,5,70,0.3,0,0,0);
 	Ball ball = new Ball(200,200,20,20,1.5,0);
-	int currentState;
-	
+	double p2vy;
+	double p2vx;
+	double p1vy;
+	double p1vx;
+	double ballvx;
+	double ballvy;
 	int collisionCheck = 0;
 	static boolean enter = false;
 	GamePanel(){ 
 		t.start();
-		setFocusable(true);
 	}
 	
 	
@@ -48,8 +51,8 @@ public class GamePanel extends JPanel implements KeyListener {
 			movePlayer(p2);
 			curveVelocity(p1);
 			curveVelocity(p2);
-			collisions(p1);
-			collisions(p2);
+			p1collisions();
+			p2collisions();
 //			if (p1.up || p1.down) {
 //				while (p1.vy <= p1.speed && p1.vy >= (p1.speed*-1)) {
 //					p1.vy*=2;
@@ -190,20 +193,114 @@ public class GamePanel extends JPanel implements KeyListener {
 		player.vy/=1.1;
 		
 	}
-	void collisions (Player player) {
-		if (ball.ballBox.intersects(player.collisionBox) && collisionCheck > 60) {
+	/*void collisions (Player player) {
+		if ((ball.ballBox.intersects(p1.collisionBox) && collisionCheck > 60) || (ball.ballBox.intersects(p2.collisionBox) && collisionCheck > 60)) {
+			if (p2.vx < 0 & ball.vx < 0) {
+				p2.vx+=-5*ball.vx;
+				ball.vx = ball.vx*1;
+			} else {
 			if (player.vy>0 || player.vy<0) {
 				ball.vy+=(player.vy/2);
 			}
 			if (player.vx>0 || player.vx<0) {
 				ball.vx+=(player.vy/2);
 			}
-			player.vx+=2*ball.vx;
-			player.vy+=2*ball.vy;
+			 else {
+				player.vx+=5*ball.vx;
+				player.vy+=5*ball.vy;
+			}
+			
 			ball.vx = ball.vx*-1;
+			collisionCheck = 0;
+		}}
+	}*/
+	void p1collisions () {
+		p2vy = p2.vy;
+		p2vx = p2.vx;
+		ballvy = ball.vy;
+		ballvx = ball.vx;
+		if (ball.ballBox.intersects(p1.collisionBox) && collisionCheck > 60) {
+			if (p1vx == 0) {
+				ball.vx = ball.vx*-1;
+				p1.vx += 5*ballvx;
+			}
+			if (p1vx < 0 && ballvx < 0 && p1vx < ballvx) {
+				ball.vx -= (p1vx/2);
+				p1.vx += -5*ballvx;
+			}
+			if (p1vx < 0 && ballvx < 0 && p1vx > ballvx) {
+				ball.vx += (p1vx/2);
+				p1.vx += -5*ballvx;
+			}
+			if (p1vx > 0 && ballvx > 0 && p1vx > ballvx) {
+				ball.vx += (p1vx/2);
+				p1.vx += -5*ballvx;
+			}
+			if (p1vx > 0 && ballvx > 0 && p1vx < ballvx) {
+				ball.vx -= (p1vx/2);
+				p1.vx += -5*ballvx;
+			}
+			if (p1vx < 0 && ballvx > 0) {
+				ball.vx = ball.vx*-1;
+				ball.vx += (p1vx/2);
+				p1.vx += 5*ballvx;
+			}
+			if (p1vx > 0 && ballvx < 0) {
+				ball.vx = ball.vx*-1;
+				ball.vx += (p1vx/2);
+				p1.vx += 5*ballvx;
+			}
 			collisionCheck = 0;
 		}
 	}
+	void p2collisions () {
+		if (ball.ballBox.intersects(p2.collisionBox) && collisionCheck > 60) {
+			p2vy = p2.vy;
+			p2vx = p2.vx;
+			ballvy = ball.vy;
+			ballvx = ball.vx;
+			if (p2vx == 0) {
+				ball.vx = ball.vx*-1;
+				p2.vx += 5*ballvx;
+			}
+			if (p2vy>0 && ballvy>=0) {
+				ball.vy += (p2vy/2);
+				p2.vy += 5*ballvy;
+			}
+			if (p2vy<0 && ballvy<=0) {
+				ball.vy += (p2vy/2);
+				p2.vy += 5*ballvy;
+			}
+			if (p2vy>0 && ballvy<=0) {
+				ball.vy += (p2vy/2);
+				p2.vy += 5*ballvy;
+			}
+			if (p2vy<0 && ballvy>=0) {
+				ball.vy += (p2vy/2);
+				p2.vy += 5*ballvy;
+			}
+			if (p2vx < 0 && ballvx < 0) {
+				ball.vx += (p2vx/2);
+				p2.vx += -5*ballvx;
+			}
+			if (p2vx > 0 && ballvx > 0) {
+				ball.vx += (p2vx/2);
+				p2.vx += -5*ballvx;
+			}
+			if (p2vx < 0 && ballvx > 0) {
+				ball.vx = ball.vx*-1;
+				ball.vx += (p2vx/2);
+				p2.vx += 5*ballvx;
+			}
+			if (p2vx > 0 && ballvx < 0) {
+				ball.vx = ball.vx*-1;
+				ball.vx += (p2vx/2);
+				p2.vx += 5*ballvx;
+			}
+			collisionCheck = 0;
+		}
+	}
+
 	void reset() {
 		p1.x = 40;
 		p1.y = 200;
