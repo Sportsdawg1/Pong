@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -22,6 +23,7 @@ public class GamePanel extends JPanel implements KeyListener {
 	double ballvy;
 	int collisionCheck = 0;
 	static boolean enter = false;
+	long threehundred = 300;
 	GamePanel(){ 
 		t.start();
 	}
@@ -32,12 +34,12 @@ public class GamePanel extends JPanel implements KeyListener {
 	Timer t = new Timer(1000/180, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (ball.x > 580) {
+			if (ball.x > 580 && p1.points < 10 && p2.points < 10) {
 				p1.points++;
 				System.out.println(p1.points);
 				reset();
 			}
-			if (ball.x < 20) {
+			if (ball.x < 20 && p2.points < 10 && p1.points < 10) {
 				p2.points++;
 				System.out.println(p2.points);
 				reset();
@@ -215,11 +217,11 @@ public class GamePanel extends JPanel implements KeyListener {
 		}}
 	}*/
 	void p1collisions () {
-		p2vy = p2.vy;
-		p2vx = p2.vx;
+		p1vy = p1.vy;
+		p1vx = p1.vx;
 		ballvy = ball.vy;
 		ballvx = ball.vx;
-		if (ball.ballBox.intersects(p1.collisionBox) && collisionCheck > 60) {
+		if (ball.ballBox.intersects(p1.collisionBox) && collisionCheck > 10) {
 			if (p1vx == 0) {
 				ball.vx = ball.vx*-1;
 				p1.vx += 5*ballvx;
@@ -250,11 +252,27 @@ public class GamePanel extends JPanel implements KeyListener {
 				ball.vx += (p1vx/2);
 				p1.vx += 5*ballvx;
 			}
+			if (p1vy>0 && ballvy>=0) {
+				ball.vy += (p1vy/2);
+				p1.vy += 5*ballvy;
+			}
+			if (p1vy<0 && ballvy<=0) {
+				ball.vy += (p1vy/2);
+				p1.vy += 5*ballvy;
+			}
+			if (p1vy>0 && ballvy<=0) {
+				ball.vy += (p1vy/2);
+				p1.vy += 5*ballvy;
+			}
+			if (p1vy<0 && ballvy>=0) {
+				ball.vy += (p1vy/2);
+				p1.vy += 5*ballvy;
+			}
 			collisionCheck = 0;
 		}
 	}
 	void p2collisions () {
-		if (ball.ballBox.intersects(p2.collisionBox) && collisionCheck > 60) {
+		if (ball.ballBox.intersects(p2.collisionBox) && collisionCheck > 10) {
 			p2vy = p2.vy;
 			p2vx = p2.vx;
 			ballvy = ball.vy;
@@ -300,7 +318,10 @@ public class GamePanel extends JPanel implements KeyListener {
 			collisionCheck = 0;
 		}
 	}
-
+	void checkPoints() {
+		JOptionPane.showMessageDialog(null, "EXIT GAME");
+		System.exit(0);
+	}
 	void reset() {
 		p1.x = 40;
 		p1.y = 200;
@@ -308,7 +329,7 @@ public class GamePanel extends JPanel implements KeyListener {
 		p2.y = 200;
 		ball.x = 200;
 		ball.y = 200;
-		ball.vx = 1.5;
+		ball.vx = -1.5;
 		ball.vy = 0;
 		p1.vx = 0;
 		p1.vy = 0;
@@ -320,15 +341,32 @@ public class GamePanel extends JPanel implements KeyListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
-		g.setColor(Color.RED);
-		g.fillRect(0, 0, 20, 600);
-		g.fillRect(580, 0, 20, 600);
-		g.setColor(Color.WHITE);
-		p1.draw(g);
-		p2.draw(g);
-		ball.draw(g);
+		if (p1.points < 10 && p2.points < 10) { 
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
+			g.setColor(Color.RED);
+			g.fillRect(0, 0, 20, 600);
+			g.fillRect(580, 0, 20, 600);
+			g.setColor(Color.WHITE);
+			g.drawString(Integer.toString(p1.points), 30, 50);
+			g.drawString(Integer.toString(p2.points), 570, 50);
+			p1.draw(g);
+			p2.draw(g);
+			ball.draw(g);
+		} else if (p1.points == 10) {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
+			g.setColor(Color.BLUE);
+			g.drawString("The left side wins!", 200, 300);
+			g.drawString("Click the red button to close the game.", 200, 340);
+
+		} else if (p2.points == 10) {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, (int) Math.round(PongRunner.width), (int) Math.round(PongRunner.height));
+			g.setColor(Color.RED);
+			g.drawString("The right side wins!", 200, 300);
+			g.drawString("Click the red button to close the game.", 200, 340);
+		}
 	}
 
 
@@ -390,7 +428,6 @@ public class GamePanel extends JPanel implements KeyListener {
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		int keyInt = e.getKeyCode();
-		char charReleased = e.getKeyChar();
 		if (keyInt == KeyEvent.VK_W) {
 			p1.up = false;
 		}
